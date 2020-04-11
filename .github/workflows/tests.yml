@@ -9,27 +9,11 @@ jobs:
         env:
             extensions: mbstring, intl, json, phalcon-4.0.5, mysql, pgsql, xdebug
             key: cache-v2.0~19.03.2020
-        services:
-          mysql:
-              image: mysql:5.7
-              env:
-                  MYSQL_DATABASE: devtools
-                  MYSQL_ROOT_PASSWORD: root
-              ports:
-                  - 3306/tcp
-              options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
-          postgres:
-              image: postgres:10.8
-              ports:
-                  - 5432/tcp
-              env:
-                  POSTGRES_DB: devtools
-              options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
         strategy:
           fail-fast: false
           matrix:
             operating-system: [windows-2016]
-            php-versions: ['7.2', '7.3', '7.4']
+            php-versions: ['7.2', '7.3']
             ts: [ts, nts]
             include:
               - php-versions: '7.2'
@@ -37,10 +21,6 @@ jobs:
                 arch: x64
                 build_type: Win32
               - php-versions: '7.3'
-                vc_num: '15'
-                arch: x64
-                build_type: Win32
-              - php-versions: '7.4'
                 vc_num: '15'
                 arch: x64
                 build_type: Win32
