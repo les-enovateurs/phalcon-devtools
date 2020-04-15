@@ -172,10 +172,10 @@ jobs:
 #              name: ${{ env.RELEASE_ZIPBALL }}
 #              path: ${{ env.RELEASE_DLL_PATH }}
 
-          - name: Enable Phalcon
-            run: |
-              Import-Module .\.ci\win-ci-tools.psm1
-              EnablePhalconExtension
+#          - name: Enable Phalcon
+#            run: |
+#              Import-Module .\.ci\win-ci-tools.psm1
+#              EnablePhalconExtension
 
           - name: Verify install
             run: php --ri phalcon
