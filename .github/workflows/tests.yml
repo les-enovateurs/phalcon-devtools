@@ -50,25 +50,14 @@ jobs:
                 key: ${{ steps.cache-env.outputs.key }}
                 restore-keys: ${{ steps.cache-env.outputs.key }}
 
-#          - name: Setup PHP
-#            uses: shivammathur/setup-php@v1
-#            with:
-#              php-version: ${{ matrix.php-versions }}
-#              ini-values: apc.enable_cli=on, session.save_path=C:\temp
-#              tools: pecl, prestissimo
-#              extensions: ${{ env.extensions }}
-#            env:
-#              PHPTS: ${{ matrix.ts }}
-
-            - name: Setup PHP
-              uses: shivammathur/setup-php@v2
-              with:
-                  php-version: ${{ matrix.php-versions }}
-                  ini-values: apc.enable_cli=on, session.save_path=C:\temp
-                  extensions: ${{ env.extensions }}
-                  tools: pecl, prestissimo
-              env:
-                PHPTS: ${{ matrix.ts }}
+          - name: Setup PHP
+            uses: shivammathur/setup-php@v2
+            with:
+              php-version: ${{ matrix.php-versions }}
+              tools: pecl
+              extensions: ${{ env.extensions }}
+            env:
+              PHPTS: ${{ matrix.ts }}
 
 #          - name: Set Up Environment Variables
 #            run: |
