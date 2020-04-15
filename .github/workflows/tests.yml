@@ -13,17 +13,19 @@ jobs:
           fail-fast: false
           matrix:
             operating-system: [windows-2016]
-            php-versions: ['7.2', '7.3']
-            ts: [ts, nts]
+            php-versions: ['7.2']
+#            php-versions: ['7.2', '7.3']
+            ts: [ts]
+#            ts: [ts, nts]
             include:
               - php-versions: '7.2'
                 vc_num: '15'
                 arch: x64
                 build_type: Win32
-              - php-versions: '7.3'
-                vc_num: '15'
-                arch: x64
-                build_type: Win32
+#              - php-versions: '7.3'
+#                vc_num: '15'
+#                arch: x64
+#                build_type: Win32
         steps:
           - name: Disable git autocrlf
             run: git config --global core.autocrlf false
@@ -134,17 +136,6 @@ jobs:
             run: |
               Import-Module .\.ci\win-ci-tools.psm1
               InitializeReleaseVars
-
-          - name: "Setup Visual Studio Command Line for PHP SDK ${{ matrix.arch }}"
-            run: .ci\vsenv.bat -arch=${{ matrix.arch }} -host_arch=${{ matrix.arch }}
-
-          - name: Fix Environment Variables
-            shell: powershell
-            run: |
-              $v = "${env:WindowsSDKVersion}" -replace '\\$', ''
-              Write-Output "::set-env name=WindowsSDKVersion::$v"
-              $v = "${env:WindowsSDKLibVersion}" -replace '\\$', ''
-              Write-Output "::set-env name=WindowsSDKLibVersion::$v"
 
           - name: Unpack package
             run: |
