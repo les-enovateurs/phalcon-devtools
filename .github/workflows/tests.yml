@@ -91,7 +91,6 @@ jobs:
             -   name: Download phalcon pecl package
                 shell: powershell
                 run: |
-#                    Invoke-WebRequest -Uri "https://pecl.php.net/get/phalcon-${env:PHALCON_VERSION}.tgz" -OutFile "phalcon-pecl\phalcon-pecl.tgz"
                     pecl channel-update pecl.php.net
                     pecl install phalcon
 
