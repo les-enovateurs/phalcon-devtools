@@ -25,9 +25,9 @@ jobs:
                 vc_num: '15'
                 arch: x64
                 build_type: Win32
-    steps:
-       - name: Disable git autocrlf
-         run: git config --global core.autocrlf false
+        steps:
+            - name: Disable git autocrlf
+              run: git config --global core.autocrlf false
 
 #       - name: Git checkout
 #         uses: actions/checkout@v2-beta
