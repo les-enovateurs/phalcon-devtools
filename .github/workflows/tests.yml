@@ -86,7 +86,14 @@ jobs:
             -   name: Download phalcon pecl package
                 shell: powershell
                 run: |
-                    Invoke-WebRequest -Uri "https://pecl.php.net/get/phalcon-${env:PHALCON_VERSION}.tgz" -OutFile "phalcon-pecl\phalcon-pecl.tgz"
+                    Install-Phpextension phalcon -MinimumStability stable -Path ${env:TEST_PHP_EXECUTABLE}
+
+            -   name: Download phalcon pecl package
+                shell: powershell
+                run: |
+#                    Invoke-WebRequest -Uri "https://pecl.php.net/get/phalcon-${env:PHALCON_VERSION}.tgz" -OutFile "phalcon-pecl\phalcon-pecl.tgz"
+                    pecl channel-update pecl.php.net
+                    pecl install phalcon
 
             -   name: Install PHP SDK Binary Tools
                 run: |
