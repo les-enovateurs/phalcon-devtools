@@ -60,7 +60,7 @@ jobs:
             env:
               PHPTS: ${{ matrix.ts }}
 
-          - name: Set Up Environment Variables
+          - name: Install Phalcon
             run: |
               pecl channel-update pecl.php.net
               pecl install phalcon
