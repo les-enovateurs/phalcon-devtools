@@ -86,8 +86,7 @@ jobs:
             -   name: Download phalcon pecl package
                 shell: powershell
                 run: |
-                    $wc = New-Object System.Net.WebClient
-                    $wc.DownloadFile("https://pecl.php.net/get/phalcon-${env:PHALCON_VERSION}.tgz", "phalcon-pecl\phalcon-pecl.tgz")
+                    Invoke-WebRequest -Uri "https://pecl.php.net/get/phalcon-${env:PHALCON_VERSION}.tgz" -OutFile "phalcon-pecl\phalcon-pecl.tgz"
 
             -   name: Install PHP SDK Binary Tools
                 run: |
