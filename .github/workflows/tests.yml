@@ -7,191 +7,191 @@ jobs:
         name: PHP ${{ matrix.php-versions }} (${{ matrix.ts }}) test on ${{ matrix.operating-system }}
         runs-on: ${{ matrix.operating-system }}
         strategy:
-          fail-fast: false
-          matrix:
-            operating-system: [windows-2016]
-            php-versions: ['7.2', '7.3', '7.4']
-            ts: [ts, nts]
-            include:
-              - php-versions: '7.2'
-                vc_num: '15'
-                arch: x64
-                build_type: Win32
-              - php-versions: '7.3'
-                vc_num: '15'
-                arch: x64
-                build_type: Win32
-              - php-versions: '7.4'
-                vc_num: '15'
-                arch: x64
-                build_type: Win32
+            fail-fast: false
+            matrix:
+                operating-system: [windows-2016]
+                php-versions: ['7.2', '7.3', '7.4']
+                ts: [ts, nts]
+                include:
+                    -   php-versions: '7.2'
+                        vc_num: '15'
+                        arch: x64
+                        build_type: Win32
+                    -   php-versions: '7.3'
+                        vc_num: '15'
+                        arch: x64
+                        build_type: Win32
+                    -   php-versions: '7.4'
+                        vc_num: '15'
+                        arch: x64
+                        build_type: Win32
         steps:
-            - name: Disable git autocrlf
-              run: git config --global core.autocrlf false
+            -   name: Disable git autocrlf
+                run: git config --global core.autocrlf false
 
-            - name: Git checkout
-              uses: actions/checkout@v2-beta
-              with:
-                fetch-depth: 1
+            -   name: Git checkout
+                uses: actions/checkout@v2-beta
+                with:
+                    fetch-depth: 1
 
-               - name: Setup PHP
-                 uses: shivammathur/setup-php@v1
-                 with:
-                   php-version: ${{ matrix.php-versions }}
-                   ini-values: apc.enable_cli=on, session.save_path=C:\temp
-                   tools: pecl, prestissimo
-                   extensions: mbstring, intl, json, yaml, apcu, psr, imagick, gd, redis, igbinary, msgpack-beta, sqlite3
-                 env:
-                   PHPTS: ${{ matrix.ts }}
+            -   name: Setup PHP
+            uses: shivammathur/setup-php@v1
+            with:
+                php-version: ${{ matrix.php-versions }}
+                ini-values: apc.enable_cli=on, session.save_path=C:\temp
+                tools: pecl, prestissimo
+                extensions: mbstring, intl, json, yaml, apcu, psr, imagick, gd, redis, igbinary, msgpack-beta, sqlite3
+            env:
+                PHPTS: ${{ matrix.ts }}
 
-               - name: Set Up Environment Variables
-                 run: |
-                   echo "::set-env name=PHP_SDK_VERSION::2.2.0"
-                   echo "::set-env name=PHP_DEVPACK::C:\tools\php-devpack"
-                   echo "::set-env name=PHP_SDK_PATH::C:\tools\php-sdk"
-                   echo "::set-env name=PHP_PECL_PATH::C:\tools\pecl"
-                   echo "::set-env name=PHP_VERSION::$(php -r 'echo phpversion();')"
-                   echo "::set-env name=PHP_MINOR::${{ matrix.php-versions }}"
-                   echo "::set-env name=TEST_PHP_EXECUTABLE::${env:PHPROOT}\php.exe"
-                   echo "::set-env name=VC_VERSION::${{ matrix.vc_num }}"
-                   echo "::set-env name=PHP_ARCH::${{ matrix.arch }}"
-                   echo "::set-env name=PACKAGE_PREFIX::phalcon"
-                   echo "::set-env name=EXTENSION_NAME::phalcon"
-                   echo "::set-env name=EXTENSION_FILE::php_phalcon.dll"
-                   echo "::set-env name=PHALCON_VERSION::4.0.4"
-                   echo "::set-env name=PHPTS::${{ matrix.ts }}"
-                   If ("${{ matrix.ts }}" -eq "nts") {
-                     echo "::set-env name=BUILD_TYPE::nts-${{ matrix.build_type }}"
-                   } Else {
-                     echo "::set-env name=BUILD_TYPE::${{ matrix.build_type }}"
-                   }
-               - name: Setup Composer Token
-                 run: |
-                   # To increase the Composer rate limit we're use GitHub authentication
-                   if ("${{ secrets.COMPOSER_TOKEN }}" -ne "") {
-                       composer config github-oauth.github.com ${{ secrets.COMPOSER_TOKEN }}
-                   }
+                    -   name: Set Up Environment Variables
+                        run: |
+                            echo "::set-env name=PHP_SDK_VERSION::2.2.0"
+                            echo "::set-env name=PHP_DEVPACK::C:\tools\php-devpack"
+                            echo "::set-env name=PHP_SDK_PATH::C:\tools\php-sdk"
+                            echo "::set-env name=PHP_PECL_PATH::C:\tools\pecl"
+                            echo "::set-env name=PHP_VERSION::$(php -r 'echo phpversion();')"
+                            echo "::set-env name=PHP_MINOR::${{ matrix.php-versions }}"
+                            echo "::set-env name=TEST_PHP_EXECUTABLE::${env:PHPROOT}\php.exe"
+                            echo "::set-env name=VC_VERSION::${{ matrix.vc_num }}"
+                            echo "::set-env name=PHP_ARCH::${{ matrix.arch }}"
+                            echo "::set-env name=PACKAGE_PREFIX::phalcon"
+                            echo "::set-env name=EXTENSION_NAME::phalcon"
+                            echo "::set-env name=EXTENSION_FILE::php_phalcon.dll"
+                            echo "::set-env name=PHALCON_VERSION::4.0.4"
+                            echo "::set-env name=PHPTS::${{ matrix.ts }}"
+                            If ("${{ matrix.ts }}" -eq "nts") {
+                              echo "::set-env name=BUILD_TYPE::nts-${{ matrix.build_type }}"
+                            } Else {
+                              echo "::set-env name=BUILD_TYPE::${{ matrix.build_type }}"
+                            }
+                    -   name: Setup Composer Token
+                        run: |
+                            # To increase the Composer rate limit we're use GitHub authentication
+                            if ("${{ secrets.COMPOSER_TOKEN }}" -ne "") {
+                                composer config github-oauth.github.com ${{ secrets.COMPOSER_TOKEN }}
+                            }
 
-               - name: Setup Common Environment
-                 run: |
-                   Import-Module .\.ci\win-ci-tools.psm1
-                   SetupCommonEnvironment
+                    -   name: Setup Common Environment
+                        run: |
+                            Import-Module .\.ci\win-ci-tools.psm1
+                            SetupCommonEnvironment
 
-               - name: Get Composer Cache Directory
-                 id: composer-cache
-                 run: |
-                   echo "::set-output name=dir::$(composer config cache-files-dir)"
+                    -   name: Get Composer Cache Directory
+                        id: composer-cache
+                        run: |
+                            echo "::set-output name=dir::$(composer config cache-files-dir)"
 
-               - name: Setup Cache
-                 uses: actions/cache@v1
-                 with:
-                   path: ${{ steps.composer-cache.outputs.dir }}
-                   key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
-                   restore-keys: |
-                     ${{ runner.os }}-composer-
+                    -   name: Setup Cache
+                        uses: actions/cache@v1
+                        with:
+                            path: ${{ steps.composer-cache.outputs.dir }}
+                            key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
+                            restore-keys: |
+                                ${{ runner.os }}-composer-
 
-               - name: Download phalcon pecl package
-                 uses: actions/download-artifact@v1
-                 with:
-                   name: phalcon-pecl
+                    -   name: Download phalcon pecl package
+                        uses: actions/download-artifact@v1
+                        with:
+                            name: phalcon-pecl
 
-               - name: Install PHP SDK Binary Tools
-                 run: |
-                   Import-Module .\.ci\win-ci-tools.psm1
-                   InstallPhpSdk
+                    -   name: Install PHP SDK Binary Tools
+                        run: |
+                            Import-Module .\.ci\win-ci-tools.psm1
+                            InstallPhpSdk
 
-               - name: Install PHP Dev pack
-                 run: |
-                   Import-Module .\.ci\win-ci-tools.psm1
-                   InstallPhpDevPack
+                    -   name: Install PHP Dev pack
+                        run: |
+                            Import-Module .\.ci\win-ci-tools.psm1
+                            InstallPhpDevPack
 
-               - name: Getting Details About Installed PHP
-                 run: |
-                   Import-Module .\.ci\win-ci-tools.psm1
-                   Get-Php "${env:PHPROOT}"
+                    -   name: Getting Details About Installed PHP
+                        run: |
+                            Import-Module .\.ci\win-ci-tools.psm1
+                            Get-Php "${env:PHPROOT}"
 
-               - name: Install System Dependencies
-                 run: choco install -y --cache-location=C:\Downloads\Choco re2c
+                    -   name: Install System Dependencies
+                        run: choco install -y --cache-location=C:\Downloads\Choco re2c
 
-               - name: Initialize Release Variables
-                 run: |
-                   Import-Module .\.ci\win-ci-tools.psm1
-                   InitializeReleaseVars
+                    -   name: Initialize Release Variables
+                        run: |
+                            Import-Module .\.ci\win-ci-tools.psm1
+                            InitializeReleaseVars
 
-               - name: "Setup Visual Studio Command Line for PHP SDK ${{ matrix.arch }}"
-                 run: .ci\vsenv.bat -arch=${{ matrix.arch }} -host_arch=${{ matrix.arch }}
+                    -   name: "Setup Visual Studio Command Line for PHP SDK ${{ matrix.arch }}"
+                        run: .ci\vsenv.bat -arch=${{ matrix.arch }} -host_arch=${{ matrix.arch }}
 
-               - name: Fix Environment Variables
-                 shell: powershell
-                 run: |
-                   $v = "${env:WindowsSDKVersion}" -replace '\\$', ''
-                   Write-Output "::set-env name=WindowsSDKVersion::$v"
+                    -   name: Fix Environment Variables
+                        shell: powershell
+                        run: |
+                            $v = "${env:WindowsSDKVersion}" -replace '\\$', ''
+                            Write-Output "::set-env name=WindowsSDKVersion::$v"
 
-                   $v = "${env:WindowsSDKLibVersion}" -replace '\\$', ''
-                   Write-Output "::set-env name=WindowsSDKLibVersion::$v"
+                            $v = "${env:WindowsSDKLibVersion}" -replace '\\$', ''
+                            Write-Output "::set-env name=WindowsSDKLibVersion::$v"
 
-               - name: Unpack package
-                 run: |
-                   Import-Module .\.ci\win-ci-tools.psm1
-                   Expand-Item7zip "phalcon-pecl\phalcon-pecl.tgz" "${env:Temp}"
-                   Expand-Item7zip "${env:Temp}\phalcon-pecl.tar" "${env:PHP_PECL_PATH}\phalcon"
+                    -   name: Unpack package
+                        run: |
+                            Import-Module .\.ci\win-ci-tools.psm1
+                            Expand-Item7zip "phalcon-pecl\phalcon-pecl.tgz" "${env:Temp}"
+                            Expand-Item7zip "${env:Temp}\phalcon-pecl.tar" "${env:PHP_PECL_PATH}\phalcon"
 
-               - name: Phpize
-                 shell: cmd
-                 run: |
-                   set PATH=%PATH%;%PHP_DEVPACK%
-                   cd /d %PHP_PECL_PATH%\phalcon\phalcon-%PHALCON_VERSION%
-                   phpize
+                    -   name: Phpize
+                        shell: cmd
+                        run: |
+                            set PATH=%PATH%;%PHP_DEVPACK%
+                            cd /d %PHP_PECL_PATH%\phalcon\phalcon-%PHALCON_VERSION%
+                            phpize
 
-               - name: Configure
-                 shell: cmd
-                 run: |
-                   set PATH=%PATH%;%PHP_DEVPACK%
-                   cd /d %PHP_PECL_PATH%\phalcon\phalcon-%PHALCON_VERSION%
-                   configure --enable-phalcon
+                    -   name: Configure
+                        shell: cmd
+                        run: |
+                            set PATH=%PATH%;%PHP_DEVPACK%
+                            cd /d %PHP_PECL_PATH%\phalcon\phalcon-%PHALCON_VERSION%
+                            configure --enable-phalcon
 
-               - name: Nmake
-                 shell: cmd
-                 run: |
-                   set PATH=%PATH%;%PHP_DEVPACK%
-                   cd /d %PHP_PECL_PATH%\phalcon\phalcon-%PHALCON_VERSION%
-                   nmake
+                    -   name: Nmake
+                        shell: cmd
+                        run: |
+                            set PATH=%PATH%;%PHP_DEVPACK%
+                            cd /d %PHP_PECL_PATH%\phalcon\phalcon-%PHALCON_VERSION%
+                            nmake
 
-               - name: Inspecting Phalcon Extension DLL File
-                 run: Get-PhpExtension "${env:RELEASE_DLL_PATH}"
+                    -   name: Inspecting Phalcon Extension DLL File
+                        run: Get-PhpExtension "${env:RELEASE_DLL_PATH}"
 
-               - uses: actions/upload-artifact@v1
-                 with:
-                   name: ${{ env.RELEASE_ZIPBALL }}
-                   path: ${{ env.RELEASE_DLL_PATH }}
+                    -   uses: actions/upload-artifact@v1
+                        with:
+                            name: ${{ env.RELEASE_ZIPBALL }}
+                            path: ${{ env.RELEASE_DLL_PATH }}
 
-               - name: Enable Phalcon
-                 run: |
-                   Import-Module .\.ci\win-ci-tools.psm1
-                   EnablePhalconExtension
+                    -   name: Enable Phalcon
+                        run: |
+                            Import-Module .\.ci\win-ci-tools.psm1
+                            EnablePhalconExtension
 
-               - name: Verify install
-                 run: php --ri phalcon
+                    -   name: Verify install
+                        run: php --ri phalcon
 
-               - name: Install packages
-                 run: composer install --prefer-dist
+                    -   name: Install packages
+                        run: composer install --prefer-dist
 
-               - name: Setup tests
-                 run: |
-                   cp tests/_ci/.env.default .env
-                   vendor/bin/codecept build
+                    -   name: Setup tests
+                        run: |
+                            cp tests/_ci/.env.default .env
+                            vendor/bin/codecept build
 
-               - name: Run unit tests
-                 run: vendor/bin/codecept run --ext DotReporter unit
+                    -   name: Run unit tests
+                        run: vendor/bin/codecept run --ext DotReporter unit
 
-               - name: Run cli tests
-                 run: vendor/bin/codecept run --ext DotReporter cli
- 
- 
- #    run-test-windows:
- #        name: PHP ${{ matrix.php-versions }} (${{ matrix.ts }}) test on ${{ matrix.operating-system }}
- #        runs-on: ${{ matrix.operating-system }}
- #        env:
+                    -   name: Run cli tests
+                        run: vendor/bin/codecept run --ext DotReporter cli
+
+
+    #    run-test-windows:
+    #        name: PHP ${{ matrix.php-versions }} (${{ matrix.ts }}) test on ${{ matrix.operating-system }}
+    #        runs-on: ${{ matrix.operating-system }}
+    #        env:
 #            extensions: mbstring, intl, json, psr, mysql, pgsql, xdebug
 #            key: cache-v2.0~19.03.2020
 #        strategy:
