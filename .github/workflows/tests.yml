@@ -105,7 +105,7 @@ jobs:
            Import-Module .\.ci\win-ci-tools.psm1
            InstallPhpDevPack
  
-        - name: Getting Details About Installed PHP
+       - name: Getting Details About Installed PHP
          run: |
            Import-Module .\.ci\win-ci-tools.psm1
            Get-Php "${env:PHPROOT}"
