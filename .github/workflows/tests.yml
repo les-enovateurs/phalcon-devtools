@@ -83,10 +83,10 @@ jobs:
                     restore-keys: |
                         ${{ runner.os }}-composer-
 
-            -   name: Download phalcon pecl package
-                shell: powershell
-                run: |
-                    Install-Phpextension phalcon -MinimumStability stable -Path ${env:TEST_PHP_EXECUTABLE}
+#            -   name: Download phalcon pecl package
+#                shell: powershell
+#                run: |
+#                    Install-Phpextension phalcon -MinimumStability stable -Path ${env:TEST_PHP_EXECUTABLE}
 
             -   name: Download phalcon pecl package
                 shell: powershell
