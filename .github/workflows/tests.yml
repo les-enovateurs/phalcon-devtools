@@ -83,10 +83,20 @@ jobs:
                     restore-keys: |
                         ${{ runner.os }}-composer-
 
-#            -   name: Download phalcon pecl package
-#                shell: powershell
-#                run: |
-#                    Install-Phpextension phalcon -MinimumStability stable -Path ${env:TEST_PHP_EXECUTABLE}
+            -   name: Download phalcon pecl package
+                shell: powershell
+                run: |
+                    $repo = "mlocati/powershell-phpmanager"
+                    $php_dir = "${env:TEST_PHP_EXECUTABLE}"
+                    $zip_file = "$php_dir\PhpManager.zip"
+                    $tags = Invoke-WebRequest https://api.github.com/repos/$repo/tags | ConvertFrom-Json
+                    $tag = $tags[0].Name
+                    $module_path = "$php_dir\PhpManager\powershell-phpmanager-$tag\PhpManager"
+                    Invoke-WebRequest -UseBasicParsing -Uri https://github.com/$repo/archive/$tag.zip -OutFile $zip_file
+                    Expand-Archive -Path $zip_file -DestinationPath $php_dir\PhpManager
+                    Import-Module $module_path
+                    Add-Content -Path $PsHome\profile.ps1 -Value "Import-Module $module_path"
+                    Install-Phpextension phalcon -MinimumStability stable -Path ${env:TEST_PHP_EXECUTABLE}
 
             -   name: Download phalcon pecl package
                 shell: powershell
