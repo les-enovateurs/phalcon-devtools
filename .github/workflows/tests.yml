@@ -7,7 +7,7 @@ jobs:
         name: PHP ${{ matrix.php-versions }} (${{ matrix.ts }}) test on ${{ matrix.operating-system }}
         runs-on: ${{ matrix.operating-system }}
         env:
-            extensions: mbstring, intl, json, psr, phalcon4, mysql, pgsql, xdebug
+            extensions: mbstring, intl, json, psr, mysql, pgsql, xdebug
             key: cache-v2.0~19.03.2020
         strategy:
           fail-fast: false
@@ -59,6 +59,11 @@ jobs:
               coverage: xdebug #optional
             env:
               PHPTS: ${{ matrix.ts }}
+
+          - name: Set Up Environment Variables
+            run: |
+              pecl channel-update pecl.php.net
+              pecl install phalcon
 
 #          - name: Set Up Environment Variables
 #            run: |
