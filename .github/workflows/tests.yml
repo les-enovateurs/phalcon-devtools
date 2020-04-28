@@ -7,7 +7,7 @@ jobs:
         name: PHP ${{ matrix.php-versions }} (${{ matrix.ts }}) test on ${{ matrix.operating-system }}
         runs-on: ${{ matrix.operating-system }}
         env:
-            extensions: mbstring, intl, json, phalcon-4.0.5, mysql, pgsql, xdebug
+            extensions: mbstring, intl, json, phalcon4, mysql, pgsql, xdebug
             key: cache-v2.0~19.03.2020
         strategy:
           fail-fast: false
@@ -25,7 +25,7 @@ jobs:
 #              - php-versions: '7.3'
 #                vc_num: '15'
 #                arch: x64
-#                build_type: Win32
+#                build_type: Win32uses: shivammathur/setup-php@v2
         steps:
           - name: Disable git autocrlf
             run: git config --global core.autocrlf false
