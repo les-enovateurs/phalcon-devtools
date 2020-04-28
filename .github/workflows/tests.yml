@@ -10,8 +10,10 @@ jobs:
             fail-fast: false
             matrix:
                 operating-system: [windows-2016]
-                php-versions: ['7.2', '7.3', '7.4']
-                ts: [ts, nts]
+                php-versions: ['7.2']
+#                php-versions: ['7.2', '7.3', '7.4']
+                ts: [ts]
+#                ts: [ts, nts]
                 include:
                     -   php-versions: '7.2'
                         vc_num: '15'
@@ -95,6 +97,12 @@ jobs:
                 uses: actions/download-artifact@v1
                 with:
                     name: phalcon-pecl
+
+            -   name: Download phalcon pecl package
+                shell: powershell
+                run: |
+                    $wc = New-Object System.Net.WebClient
+                    $wc.DownloadFile("https://pecl.php.net/get/phalcon-%PHALCON_VERSION%.tgz", "phalcon-pecl\phalcon-pecl.tgz")
 
             -   name: Install PHP SDK Binary Tools
                 run: |
