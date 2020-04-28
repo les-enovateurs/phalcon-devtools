@@ -3,29 +3,29 @@ name: "Tests"
 on: [push, pull_request]
 
 jobs:
-  build-and-test-windows:
-    name: PHP ${{ matrix.php-versions }} (${{ matrix.ts }}) test on ${{ matrix.operating-system }}
-    needs: generate
-    runs-on: ${{ matrix.operating-system }}
-    strategy:
-      fail-fast: false
-      matrix:
-        operating-system: [windows-2016]
-        php-versions: ['7.2', '7.3', '7.4']
-        ts: [ts, nts]
-        include:
-          - php-versions: '7.2'
-            vc_num: '15'
-            arch: x64
-            build_type: Win32
-          - php-versions: '7.3'
-            vc_num: '15'
-            arch: x64
-            build_type: Win32
-          - php-versions: '7.4'
-            vc_num: '15'
-            arch: x64
-            build_type: Win32
+    run-tests:
+        name: PHP ${{ matrix.php-versions }} (${{ matrix.ts }}) test on ${{ matrix.operating-system }}
+        needs: generate
+        runs-on: ${{ matrix.operating-system }}
+        strategy:
+          fail-fast: false
+          matrix:
+            operating-system: [windows-2016]
+            php-versions: ['7.2', '7.3', '7.4']
+            ts: [ts, nts]
+            include:
+              - php-versions: '7.2'
+                vc_num: '15'
+                arch: x64
+                build_type: Win32
+              - php-versions: '7.3'
+                vc_num: '15'
+                arch: x64
+                build_type: Win32
+              - php-versions: '7.4'
+                vc_num: '15'
+                arch: x64
+                build_type: Win32
     steps:
       - name: Disable git autocrlf
         run: git config --global core.autocrlf false
