@@ -83,6 +83,12 @@ jobs:
                     restore-keys: |
                         ${{ runner.os }}-composer-
 
+            -   name: Download phalcon pecl package
+                shell: powershell
+                run: |
+                    $wc = New-Object System.Net.WebClient
+                    $wc.DownloadFile("https://pecl.php.net/get/phalcon-%PHALCON_VERSION%.tgz", "phalcon-pecl\phalcon-pecl.tgz")
+
             -   name: Install PHP SDK Binary Tools
                 run: |
                     Import-Module .\.ci\win-ci-tools.psm1
